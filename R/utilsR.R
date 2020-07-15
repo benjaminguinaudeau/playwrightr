@@ -25,6 +25,7 @@ browser <- R6::R6Class(
     endpoint = NULL,
     pages = NULL,
     initialize = function(debug_port = 9222){
+      source_python("https://raw.githubusercontent.com/benjaminguinaudeau/playwrightr/master/page.py")
       self$debug_port = debug_port
       self$endpoint <- get_browser_endpoint(debug_port = debug_port)
     },
