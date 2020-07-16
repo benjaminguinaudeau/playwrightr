@@ -4,7 +4,7 @@ import pyppeteer
 import sys
 
 if not sys.warnoptions:
-    warnings.simplefilter("ignore")
+  warnings.simplefilter("ignore")
 
 class page:
   def __init__(self, endpoint, title, script):
@@ -28,3 +28,4 @@ class page:
                       self.source = await page.evaluate(self.script)
                     except:
                       self.source = sys.exc_info()[0]
+      browser = await pyppeteer.disconnect(s)
