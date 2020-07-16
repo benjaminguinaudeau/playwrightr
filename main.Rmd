@@ -12,24 +12,31 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 reticulate::use_python("/usr/local/bin/python3")
 library(reticulate)
+devtools::load_all()
 ```
 
 ```{r}
 # launch_chrome_mac()
-reticulate::py_install("pyppeteer", pip = T)
+# reticulate::py_install("pyppeteer", pip = T)
 chrome <- browser$new(debug_port = 9222)
+
 
 tabs <- chrome$list_tabs()
 
 target_title <- tabs %>%
-  dplyr::filter(stringr::str_detect(url, "ringGameTable")) %>%
   dplyr::pull(title)
+  dplyr::filter(stringr::str_detect(url, "ringGameTable")) %>%
 
+a <- chrome$execute(title = target_title[1], script = 'document.querySelector("body").innerHTML')[[1]]    
+    
 e %>%
   purrr::reduce(c) %>%
   tibble::tibble(source = .)
+library(rvest)
+chrome$execute(title = target_title[1], script = 'document.querySelector("body").innerHTML')[[1]] %>%
+  read_html(c(., "")) %>%
+  html_nodes("div")
 
-chrome$execute(title = target_title[1], script = 'document.querySelector(".table_page").innerHTML')
 
 
 ```

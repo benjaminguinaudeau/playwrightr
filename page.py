@@ -1,10 +1,11 @@
-import asyncio
 import warnings
+warnings.simplefilter("ignore")
+# warnings.filterwarnings(action='once')
+import asyncio
 import pyppeteer
 import sys
 
-if not sys.warnoptions:
-  warnings.simplefilter("ignore")
+  
 
 class page:
   def __init__(self, endpoint, title, script):
@@ -12,8 +13,16 @@ class page:
     self.title = title
     self.script = script
     
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(self.execute())
+    try:
+      loop = asyncio.new_event_loop()
+      loop.run_until_complete(self.execute())
+      loop.run_forever()
+      tasks = Task.all_tasks()
+      for t in [t for t in tasks if not (t.done() or t.cancelled())]:
+        loop.run_until_complete(t)
+    finally:
+      loop.close()
+
     
   async def execute(self):
       browser = await pyppeteer.connect({'browserWSEndpoint': self.endpoint})
@@ -28,4 +37,3 @@ class page:
                       self.source = await page.evaluate(self.script)
                     except:
                       self.source = sys.exc_info()[0]
-      browser = await pyppeteer.disconnect(s)
