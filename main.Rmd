@@ -16,7 +16,7 @@ library(reticulate)
 
 ```{r}
 # launch_chrome_mac()
-
+reticulate::py_install("pyppeteer", pip = T)
 chrome <- browser$new(debug_port = 9222)
 
 tabs <- chrome$list_tabs()

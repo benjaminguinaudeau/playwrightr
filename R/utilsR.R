@@ -10,6 +10,13 @@ launch_chrome_mac <- function(debug_port = 9222, data_dir = here::here()){
   system(glue::glue("/Applications/Google\\\ Chrome.app/Contents/MacOS/Google\\\ Chrome --remote-debugging-port={debug_port} --no-first-run --no-default-browser-check --user-data-dir={data_dir} &"))
 }
 
+#' launch_chrome_linux
+#' @export
+launch_chrome_linux <- function(debug_port = 9222, data_dir = here::here(), headless = T){
+  headless <- ifelse(headless, " --headless ", " ")
+  system(glue::glue("google-chrome --remote-debugging-port={debug_port} --no-first-run --no-default-browser-check --user-data-dir={data_dir}{}headless}&"))
+}
+
 #' get_tabs
 #' @export
 get_tabs <- function(debug_port = 9222){
@@ -25,7 +32,7 @@ browser <- R6::R6Class(
     endpoint = NULL,
     pages = NULL,
     initialize = function(debug_port = 9222){
-      source_python("https://raw.githubusercontent.com/benjaminguinaudeau/playwrightr/master/page.py")
+      reticulate::source_python("https://raw.githubusercontent.com/benjaminguinaudeau/playwrightr/master/page.py")
       self$debug_port = debug_port
       self$endpoint <- get_browser_endpoint(debug_port = debug_port)
     },
