@@ -16,11 +16,13 @@ class page:
     try:
       loop = asyncio.new_event_loop()
       loop.run_until_complete(self.execute())
-      loop.run_forever()
-      tasks = Task.all_tasks()
-      for t in [t for t in tasks if not (t.done() or t.cancelled())]:
-        loop.run_until_complete(t)
+      # for t in [t for t in tasks if not (t.done() or t.cancelled())]:
+      #   loop.run_until_complete(t)
+    except:
+      loop.stop()
+      loop.close()
     finally:
+      loop.stop()
       loop.close()
 
     
@@ -37,3 +39,4 @@ class page:
                       self.source = await page.evaluate(self.script)
                     except:
                       self.source = sys.exc_info()[0]
+      await browser.disconnect()
