@@ -1,5 +1,8 @@
 import asyncio
+import warnings
 import pyppeteer
+
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 class page:
   def __init__(self, endpoint, title, script):
