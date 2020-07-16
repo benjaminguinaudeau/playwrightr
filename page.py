@@ -14,7 +14,6 @@ class page:
     
     loop = asyncio.new_event_loop()
     loop.run_until_complete(self.execute())
-    loop.stop()
     
   async def execute(self):
       browser = await pyppeteer.connect({'browserWSEndpoint': self.endpoint})
