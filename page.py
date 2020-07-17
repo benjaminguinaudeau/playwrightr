@@ -9,7 +9,7 @@ import re
   
 
 class page:
-  def __init__(self, endpoint, title, tab_index, script, debug = False):
+  def __init__(self, endpoint, title, script, debug = False):
     self.endpoint = endpoint
     self.debug = debug
     self.title = re.sub(r'[^a-z0-9]+', '', title)
