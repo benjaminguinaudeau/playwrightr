@@ -9,7 +9,7 @@ import re
   
 
 class page:
-  def __init__(self, endpoint, title = None, tab_id = None, script):
+  def __init__(self, endpoint, title, script):
     self.endpoint = endpoint
     self.title = re.sub(r'\W+', '', title)
     self.script = script
@@ -27,17 +27,16 @@ class page:
   async def execute(self):
       browser = await pyppeteer.connect({'browserWSEndpoint': self.endpoint})
       pages = []
-      if title: 
-        for target in browser.targets():
-          if target.type == 'page':
-              page = await target.page()
-              if page:
-                  title = await page.title()
-                  if re.sub(r'\W+', '', title) == self.title:
-                    try:
-                      self.source = await page.evaluate(self.script)
-                    except:
-                      self.source = sys.exc_info()[0]
+      for target in browser.targets():
+        if target.type == 'page':
+            page = await target.page()
+            if page:
+                title = await page.title()
+                if re.sub(r'\W+', '', title) == self.title:
+                  try:
+                    self.source = await page.evaluate(self.script)
+                  except:
+                    self.source = sys.exc_info()[0]
       await browser.disconnect()
 
 # async def execute(endpoint, tab_id):
