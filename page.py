@@ -11,7 +11,7 @@ import re
 class page:
   def __init__(self, endpoint, title, script):
     self.endpoint = endpoint
-    self.title = re.sub(r'\W+', '', title)
+    self.title = re.sub(r'[a-z0-9]+', '', title)
     self.script = script
     
     try:
@@ -32,7 +32,7 @@ class page:
           page = await target.page()
           if page:
               title = await page.title()
-              if re.sub(r'\W+', '', title) == self.title:
+              if re.sub(r'[a-z0-9]+', '', title) == self.title:
                 try:
                   self.source = await page.evaluate(self.script)
                 except:
