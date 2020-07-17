@@ -9,8 +9,9 @@ import re
   
 
 class page:
-  def __init__(self, endpoint, title, tab_index, script):
+  def __init__(self, endpoint, title, tab_index, script, debug = False):
     self.endpoint = endpoint
+    self.debug = debug
     self.title = re.sub(r'[^a-z0-9]+', '', title)
     self.script = script
     
@@ -32,7 +33,7 @@ class page:
           page = await target.page()
           if page:
               title = await page.title()
-              if debug:
+              if self.debug:
                 print(title)
               if re.sub(r'[^a-z0-9]+', '', title) == self.title:
                 try:
