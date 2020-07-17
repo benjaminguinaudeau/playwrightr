@@ -4,20 +4,19 @@ warnings.simplefilter("ignore")
 import asyncio
 import pyppeteer
 import sys
+import re
 
   
 
 class page:
-  def __init__(self, endpoint, title, script):
+  def __init__(self, endpoint, title = None, tab_id = None, script):
     self.endpoint = endpoint
-    self.title = title
+    self.title = re.sub(r'\W+', '', title)
     self.script = script
     
     try:
       loop = asyncio.new_event_loop()
       loop.run_until_complete(self.execute())
-      # for t in [t for t in tasks if not (t.done() or t.cancelled())]:
-      #   loop.run_until_complete(t)
     except:
       loop.stop()
       loop.close()
@@ -25,18 +24,40 @@ class page:
       loop.stop()
       loop.close()
 
-    
   async def execute(self):
       browser = await pyppeteer.connect({'browserWSEndpoint': self.endpoint})
       pages = []
-      for target in browser.targets():
+      if title: 
+        for target in browser.targets():
           if target.type == 'page':
               page = await target.page()
               if page:
                   title = await page.title()
-                  if title == self.title:
+                  if re.sub(r'\W+', '', title) == self.title:
                     try:
                       self.source = await page.evaluate(self.script)
                     except:
                       self.source = sys.exc_info()[0]
       await browser.disconnect()
+
+# async def execute(endpoint, tab_id):
+#   browser = await pyppeteer.connect({'browserWSEndpoint': endpoint})
+#   pages = []
+#   for target in browser.targets():
+#     if target.type == 'page':
+#         page = await target.page()
+#         if page:
+#             tab = await page._targetId()
+#             print(tab)
+# 
+#                   if tab == tab_id:
+#                     try:
+#                       self.source = await page.evaluate(self.script)
+#                     except:
+#                       self.source = sys.exc_info()[0]
+# loop = asyncio.new_event_loop()
+# loop.run_until_complete(execute(e, tab_id))
+
+
+
+

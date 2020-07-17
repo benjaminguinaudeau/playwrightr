@@ -37,6 +37,8 @@ chrome$execute(title = target_title[1], script = 'document.querySelector("body")
   read_html(c(., "")) %>%
   html_nodes("div")
 
-
-
+here::here("page.py")
+e <-  "ws://localhost:9222/devtools/browser/02c2cc8d-2610-40fd-ae0d-0e7fa56fc077"
+id <- "E7B902F9AF9C5D3A644A154DAE096726"
+  
 ```
