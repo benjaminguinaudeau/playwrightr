@@ -1,0 +1,299 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+conda create -n pw python=3.7
+conda activate pw
+conda config --add channels conda-forge
+conda config --add channels microsoft
+conda install playwright
+playwright install
+```
+
+```{r}
+reticulate::use_condaenv("pw", required = TRUE)
+options(python_init = TRUE)
+library(reticulate)
+```
+
+```{r}
+init_playwrightr()
+play$stop()
+```
+
+
+```{r}
+# devices <- play$devices %>%
+#   imap_dfr(~tibble::tibble(name = .y, info = list(.x)))
+# usethis::use_data(devices)
+```
+
+## Create new browser
+
+```{r}
+chromium <- new_browser("chromium", headless = F)
+firefox <- new_browser("firefox", headless = F)
+chrome <- new_browser("chrome", headless = F)
+webkit <- new_browser("webkit", headless = F)
+msedge <- new_browser("msedge", headless = F)
+
+
+chromium$tracing
+```
+
+## Emulate devices
+
+```{r}
+devices %>% glimpse
+
+chrome <- new_browser("chrome", headless = F, dev = glimpse(sample(devices$name, 1)))
+page <- chrome$pages[[1]]
+page$goto("https://www.whatismybrowser.com/")
+chrome$close()
+```
+
+```{r}
+
+cat(names(page), sep = "\n")
+
+is_element <- function(x) !inherits(x, "playwright.sync_api._generated.Page")
+is_element(page)
+class(a)
+class(page)
+
+check <- function(element, ...) {
+  element$check(...)
+  return(invisible(element))
+}
+uncheck <- function(element, ...) {
+  element$uncheck(...)
+  return(invisible(element))
+}
+click <- function(page, selector = "", ...) {
+  element$click(...)
+  return(invisible(element))
+}
+dblclick <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$dblclick(...)
+  return(invisible(page))
+}
+fill <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$fill(...)
+  return(invisible(page))
+}
+focus <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$focus(...)
+  return(invisible(page))
+}
+hover <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$hover(...)
+  return(invisible(page))
+}
+inner_html <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$inner_html(...)
+  return(invisible(page))
+}
+inner_text <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$inner_text(...)
+  return(invisible(page))
+}
+input_value <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$input_value(...)
+  return(invisible(page))
+}
+is_checked <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_checked(...)
+  return(invisible(page))
+}
+is_closed <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_closed(...)
+  return(invisible(page))
+}
+is_disabled <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_disabled(...)
+  return(invisible(page))
+}
+is_editable <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_editable(...)
+  return(invisible(page))
+}
+is_enabled <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_enabled(...)
+  return(invisible(page))
+}
+is_hidden <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_hidden(...)
+  return(invisible(page))
+}
+is_visible <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$is_visible(...)
+  return(invisible(page))
+}
+tap <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$tap(...)
+  return(invisible(page))
+}
+wait_for_selector <- function(page, selector = "", ...) {
+  element <- if(is_element(page)) element else page$locator(selector)
+  element$wait_for_selector(...)
+  return(invisible(page))
+}
+
+keyboard
+press
+
+locator
+query_selector
+query_selector_all
+
+accessibility
+add_init_script
+add_script_tag
+add_style_tag
+fill
+focus
+frame
+frame_locator
+frames
+main_frame
+mouse
+on
+once
+opener
+pause
+
+
+
+
+remove_listener
+route
+screenshot
+select_option
+set_checked
+set_content
+set_default_navigation_timeout
+set_default_timeout
+set_extra_http_headers
+set_input_files
+set_viewport_size
+
+text_content
+touchscreen
+type
+
+unroute
+url
+video
+viewport_size
+wait_for_event
+wait_for_function
+wait_for_load_state
+
+wait_for_timeout
+wait_for_url
+workers
+
+browser <- play$chromium$launch_persistent_context(user_data_dir = "dqsqsfdqsfs", 
+                                                   channel = "chrome", 
+                                                   accept_downloads = TRUE, headless = FALSE)
+page <- browser$new_page()
+page$goto("http://google.com")
+page$goto("http://leboncoin.fr")
+
+loc <- page$locator("text=Découvrir la Communauté")
+loc$scroll_into_view_if_needed()
+loc$hover()
+loc$click()
+
+elemn <- page$locator("input")
+elemn$first$click()
+
+page$keyboard$type("Emanuelle Buotin Gilbert")
+
+# https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+page$keyboard$press("Enter")
+page$keyboard$press("Control+A")
+page$keyboard$press("Meta+A")
+
+page$keyboard$down("Shift")
+page$keyboard$press("ArrowLeft")
+page$keyboard$up("Shift")
+
+page$mouse$move(0, 0)
+page$mouse$down()
+page$mouse$move(0, 100)
+page$mouse$move(100, 100)
+page$mouse$move(100, 0)
+page$mouse$move(0, 0)
+page$mouse$up()
+page$mouse$wheel(delta_x = -100, delta_y = 1800)
+
+browser$pages %>%
+  map_dfr(~tibble::tibble(page = list(.x), url = .x$url))
+
+browser$pages[[3]]$bring_to_front()
+
+```
+
+
+
+```{r}
+browser_1 <- play$chromium$launch(headless = FALSE)
+browser_2 <- play$chromium$launch(headless = FALSE)
+
+browser_1$new_page()
+cont <- browser_1$new_context()
+cont$new_page()$goto("https://google.com")
+browser_1$contexts[[6]]$pages[[2]]$content()
+```
+
+
+## Close
+
+```{r}
+
+```
+
+
+```{r}
+a <- browser$new_page()
+a$goto("http://google.com")
+```
+
+
+
+
+```{r}
+>>> from playwright.sync_api import sync_playwright
+>>> playwright = sync_playwright().start()
+# Use playwright.chromium, playwright.firefox or playwright.webkit
+# Pass headless=False to launch() to see the browser UI
+browser = playwright.chromium.launch(channel="chrome", headless=False)
+>>> browser = playwright.chromium.launch(headless=False)
+>>> page = browser.new_page()
+>>> page.goto("https://www.simons.ca/en/men-clothing/sale--sale-6714")
+>>> page.screenshot(path="example.png")
+>>> browser.close()
+>>> playwright.stop()
+```
