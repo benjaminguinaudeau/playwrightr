@@ -50,5 +50,5 @@ library(playwrightr)
 chrome <- new_browser("chrome", headless = F)
 page <- chrome$pages[[1]]
 
-page %>% goto("https://google.com")
+page$goto("https://google.com")
 ```
