@@ -1,0 +1,45 @@
+---
+title: "Use playwright to automatize data collection on twitter"
+output: github_document
+date: "2023-02-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this example, I am interested in scraping the last tweets of a given webpage. 
+
+To do so, I will: 
+
+1. Use playwright to emulate a web-browser
+2. Navigate to the twitter-page
+3. Automatically scroll down and collect all the presented tweets
+
+## Python environment
+
+```{r}
+reticulate::use_condaenv("pw", required = TRUE)
+options(python_init = TRUE)
+library(reticulate)
+library(playwrightr)
+library(dplyr)
+```
+
+```{r}
+twitter_handle <- "elonmusk"
+
+chrome <- new_browser("chrome", headless = F)
+page <- chrome$pages[[1]]
+```
+
+```{r}
+page$goto(glue::glue("https://twitter.com"))
+page$goto(glue::glue("https://twitter.com/{twitter_handle}"))
+```
+
+```{r}
+page$screenshot(path = "test.png")
+```
+
+

@@ -46,11 +46,30 @@ devtools::install_github("benjaminguinaudeau/playwrightr")
 
 This is a basic example which shows you how to solve a common problem:
 
+```{bash}
+pip install playwright
+pip install xvfbwrapper
+playwright install 
+```
+
+
 ```{r}
-reticulate::use_condaenv("pw", required = TRUE)
+# reticulate::use_condaenv("base", required = TRUE)
+reticulate::use_python("/Users/benjaminguinaudeau/opt/anaconda3/bin/python", required = TRUE)
 options(python_init = TRUE)
 library(reticulate)
-library(playwrightr)
+# library(playwrightr)
+library(dplyr)
+```
+
+
+```{r}
+# xlib <- import("xvfbwrapper")
+# vdisplay <- xlib$Xvfb()
+# vdisplay$start()
+
+reticulate::py_run_string('from playwright.sync_api import sync_playwright')
+reticulate::py_run_string('p = sync_playwright().start()')
 ```
 
 
@@ -62,5 +81,3 @@ page <- chrome$pages[[1]]
 
 page$goto("https://google.com")
 ```
-
-
