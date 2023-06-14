@@ -1,0 +1,125 @@
+---
+title: "Untitled"
+output: html_document
+date: "2023-05-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
++ Block detection based on user agent (when using linux with a mac user agent, google prevent log in)
++ Emulate specific devices: https://playwright.dev/python/docs/emulation#devices
++ 
+
+
+
+
+```{r}
+reticulate::use_python("/home/ben/anac/bin/python", required = TRUE)
+options(python_init = TRUE)
+library(reticulate)
+# library(playwrightr)
+library(dplyr)
+devtools::load_all()
+pw_init(use_xvfb = T)
+
+# Launch the browser
+browser_df <- browser_launch(headless = F)
+
+# Create a new page
+page_df <- new_page(browser_df)
+```
+
+
+```{r}
+page_df %>% screenshot("A.png")
+
+page_df %>% goto("https://www.google.com")
+
+py$rqs$all_headers
+
+
+Sys.sleep(2)
+page_df %>% screenshot("B.png")
+
+page_df %>% 
+  distinct(browser_id, page_id) %>%
+  get_by_selector(".gLFyf_ ") %>% 
+  # split(1:nrow(.)) %>%
+  slice(1) %>%
+  mutate(id = 1) %>%
+  wait_for("attached") %>%
+  glimpse
+  get_all_attributes
+  purrr::map_dfr(get_all_attributes)
+  wait_for("attached") %>%
+  type("this is a query") %>%
+  press("Enter") %>%
+  glimpse
+
+page_df %>%
+  get_by_selector(".gLFyf") %>%
+  get_all_attributes() %>%
+  glimpse
+id_EqoYiC1e5G[0] 
+```
+
+```{r}
+var attributes = {}; for (var i = 0; i < element.attributes.length; i++) {
+  var attribute = element.attributes[i];
+  attributes[attribute.name] = attribute.value;
+}
+
+// Print the attributes dictionary
+console.log(attributes);
+```
+
+
+```{r}
+page_df %>% screenshot("C.png")
+Sys.sleep(2)
+
+page_df %>% 
+  get_by_role("h3") %>% 
+  slice(2) %>%
+  click()
+
+page_df %>% screenshot("D.png")
+```
+
+
+```{r}
+# Navigate to a website
+page_df <- page_df %>% goto("https://www.google.com")
+
+page_df %>% screenshot("test.png")
+
+# Find an element by role
+page_df <- get_by_role(page_df, "button") %>% glimpse
+
+# Click on the element
+page_df <- click(page_df[1,], timeout = 3000)
+
+# Fill in a form field
+page_df <- fill(page_df, "John Doe", selector = "#name-input")
+
+# Select an option from a dropdown
+page_df <- select_option(page_df, "Option 1", selector = "#dropdown-select")
+
+# Check a checkbox
+page_df <- check(page_df, selector = "#agree-checkbox")
+
+# Submit the form
+page_df <- press(page_df, "Enter")
+
+# Get the page content
+content <- get_content(page_df)
+
+# Close the page
+close_page(page_df)
+
+# Close the browser
+close_browser(browser_df)
+```
+

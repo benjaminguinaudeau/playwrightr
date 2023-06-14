@@ -1,14 +1,3 @@
-
-generate_unique_id <- function(length = 10) {
-  sample_id <- paste(sample(c(0:9, letters, LETTERS), length, replace = TRUE), collapse = "")
-  return(paste0("id_", sample_id))
-}
-
-
-py_run <- function(str, .envir = parent.frame()) {
-  reticulate::py_run_string(glue::glue(str, .envir = .envir))
-}
-
 #' Launches a Playwright browser instance
 #'
 #' This function launches a Playwright browser instance and returns a tibble
@@ -34,28 +23,33 @@ py_run <- function(str, .envir = parent.frame()) {
 #' @importFrom purrr map_chr
 #' @importFrom tibble tibble
 #'
-browser_launch <- function(headless = TRUE, executable_path = NULL, args = NULL, proxy = NULL, slow_mo = NULL, timeout = 30000) {
+#' @export
+browser_launch <- function(browser = c("chromium", "firefox", "webkit"),
+                           headless = TRUE,
+                           timeout = 30000,
+                           user_data_dir = NULL,
+                           channel = NULL,
+                           user_agent = NULL) {
   browser_id <- generate_unique_id()
   launch_args <- list()
 
-  if (!is.null(args)) {
-    launch_args[["args"]] <- args
+  if (!is.null(user_agent)) {
+    launch_args[["user_agent"]] <- user_agent
+  }
+  if (!is.null(user_data_dir)) {
+    launch_args[["user_data_dir"]] <- user_data_dir
+  }
+  if(browser == "chromium" & !is.null(channel)){
+    # "chrome", "chrome-beta", "chrome-dev", "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary"
+    launch_args[["channel"]] <- channel
   }
 
-  if (!is.null(executable_path)) {
-    launch_args[["executablePath"]] <- executable_path
-  }
+  launch_args_str <- paste(purrr::imap_chr(launch_args, ~paste0(.y, " = \"", .x, '"')), collapse = ", ")
 
-  if (!is.null(proxy)) {
-    launch_args[["proxy"]] <- proxy
-  }
+  py_run(glue("{browser_id} = p.{browser}.launch_persistent_context(headless={stringr::str_to_title(headless)}, {launch_args_str})"))
 
-  if (!is.null(slow_mo)) {
-    launch_args[["slowMo"]] <- slow_mo
-  }
+  page_id <- generate_unique_id()
+  py_run("{page_id} = {browser_id}.pages[0]")
 
-  launch_args_str <- paste(purrr::map_chr(launch_args, .f = ~paste0(.x[1], "=", .x[2])), collapse = ", ")
-
-  py_run(glue("{browser_id} = p.chromium.launch(headless={to_title_string(headless)}, {launch_args_str})"))
-  tibble::tibble(browser_id = browser_id)
+  tibble::tibble(browser_id = browser_id, page_id)
 }

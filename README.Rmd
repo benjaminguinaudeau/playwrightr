@@ -55,7 +55,8 @@ playwright install
 
 ```{r}
 # reticulate::use_condaenv("base", required = TRUE)
-reticulate::use_python("/Users/benjaminguinaudeau/opt/anaconda3/bin/python", required = TRUE)
+# reticulate::use_python("/Users/benjaminguinaudeau/opt/anaconda3/bin/python", required = TRUE)
+reticulate::use_python("/home/ben/anac/bin/python", required = TRUE)
 options(python_init = TRUE)
 library(reticulate)
 # library(playwrightr)
@@ -64,9 +65,9 @@ library(dplyr)
 
 
 ```{r}
-# xlib <- import("xvfbwrapper")
-# vdisplay <- xlib$Xvfb()
-# vdisplay$start()
+xlib <- import("xvfbwrapper")
+vdisplay <- xlib$Xvfb()
+vdisplay$start()
 
 reticulate::py_run_string('from playwright.sync_api import sync_playwright')
 reticulate::py_run_string('p = sync_playwright().start()')
