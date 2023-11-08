@@ -420,9 +420,12 @@ wait_for <- function(page_df, selector, state = c("attached", "detached", "visib
 get_all_attributes <- function(page_df) {
 
   if ("elem_id" %in% names(page_df)) {
-    py_run(glue("el_attrs = {page_df$elem_id}[{page_df$id-1}].evaluate('el => el.getAttributeNames()');attr = [id_EqoYiC1e5G[0].get_attribute(name) for name in el_attrs]\n"))
+    py_run(glue("el_attrs = {page_df$elem_id}[{page_df$id-1}].evaluate('el => el.getAttributeNames()');attr = [{page_df$elem_id}[{page_df$id-1}].get_attribute(name) for name in el_attrs]\n"))
   } else {
     stop("Error: An element must be located before using the drag_to() method or a selector must be provided")
   }
-  bind_cols(page_df %>% rename(elem_index = id), bind_cols(py$named_attr))
+  attrs <- py$attr
+  names(attrs) <- py$el_attrs
+
+  bind_cols(page_df %>% rename(elem_index = id), as_tibble(as.list(attrs)))
 }

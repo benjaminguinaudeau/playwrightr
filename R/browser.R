@@ -24,7 +24,7 @@
 #' @importFrom tibble tibble
 #'
 #' @export
-browser_launch <- function(browser = c("chromium", "firefox", "webkit"),
+browser_launch <- function(browser = "chromium",
                            headless = TRUE,
                            timeout = 30000,
                            user_data_dir = NULL,
@@ -38,6 +38,8 @@ browser_launch <- function(browser = c("chromium", "firefox", "webkit"),
   }
   if (!is.null(user_data_dir)) {
     launch_args[["user_data_dir"]] <- user_data_dir
+  } else {
+    launch_args[["user_data_dir"]] <- tempdir()
   }
   if(browser == "chromium" & !is.null(channel)){
     # "chrome", "chrome-beta", "chrome-dev", "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary"

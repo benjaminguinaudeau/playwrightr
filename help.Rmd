@@ -22,10 +22,10 @@ library(reticulate)
 # library(playwrightr)
 library(dplyr)
 devtools::load_all()
-pw_init(use_xvfb = T)
+pw_init(use_xvfb = F)
 
 # Launch the browser
-browser_df <- browser_launch(headless = F)
+browser_df <- browser_launch(browser = "chromium", headless = F, user_data_dir = tempdir())
 
 # Create a new page
 page_df <- new_page(browser_df)

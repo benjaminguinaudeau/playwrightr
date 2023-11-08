@@ -26,7 +26,7 @@ conda install playwright
 playwright install
 ```
 
-1.  Install playwrightr from GitHub
+2.  Install playwrightr from GitHub
 
 ``` r
 # install.packages("devtools")
@@ -38,10 +38,34 @@ devtools::install_github("benjaminguinaudeau/playwrightr")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-reticulate::use_condaenv("pw", required = TRUE)
+reticulate::use_python("/home/ben/anac/bin/python", required = TRUE)
 options(python_init = TRUE)
 library(reticulate)
 library(playwrightr)
+library(dplyr)
+
+pw_init(use_xvfb = F)
+
+# Launch the browser
+browser_df <- browser_launch(browser = "firefox", user_data_dir = tempdir(), headless = T)
+
+# Create a new page
+page_df <- new_page(browser_df)
+```
+
+``` r
+page_df %>%
+  goto("https://google.com")
+
+page_df %>%
+  get_by_selector("input") %>% 
+  split(1:nrow(.)) %>%
+  purrr::map_dfr(~{
+    attrs <- get_all_attributes(.x)
+    attrs
+    
+  }) %>%
+  glimpse
 ```
 
 ## Use Playwright to browse the web

@@ -7,6 +7,7 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval = F,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
@@ -46,32 +47,38 @@ devtools::install_github("benjaminguinaudeau/playwrightr")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{bash}
-pip install playwright
-pip install xvfbwrapper
-playwright install 
-```
-
-
 ```{r}
-# reticulate::use_condaenv("base", required = TRUE)
-# reticulate::use_python("/Users/benjaminguinaudeau/opt/anaconda3/bin/python", required = TRUE)
 reticulate::use_python("/home/ben/anac/bin/python", required = TRUE)
 options(python_init = TRUE)
 library(reticulate)
-# library(playwrightr)
+library(playwrightr)
 library(dplyr)
+
+pw_init(use_xvfb = F)
+
+# Launch the browser
+browser_df <- browser_launch(browser = "firefox", user_data_dir = tempdir(), headless = T)
+
+# Create a new page
+page_df <- new_page(browser_df)
 ```
 
 
 ```{r}
-xlib <- import("xvfbwrapper")
-vdisplay <- xlib$Xvfb()
-vdisplay$start()
+page_df %>%
+  goto("https://google.com")
 
-reticulate::py_run_string('from playwright.sync_api import sync_playwright')
-reticulate::py_run_string('p = sync_playwright().start()')
+page_df %>%
+  get_by_selector("input") %>% 
+  split(1:nrow(.)) %>%
+  purrr::map_dfr(~{
+    attrs <- get_all_attributes(.x)
+    attrs
+    
+  }) %>%
+  glimpse
 ```
+
 
 
 ## Use Playwright to browse the web
